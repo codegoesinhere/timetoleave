@@ -84,12 +84,24 @@ function applyDeepLinkFromHash(){
   if ("scrollRestoration" in history) history.scrollRestoration = "manual";
   focusByAnchor(hash, {relaxFilters:true});
 }
+// --- EA link helpers (for PDF|HTML versions) ---
+function isPdfUrl(url){
+  return /\.pdf(?:$|\?)/i.test((url||"").toString());
+}
+function pdfWithPage(url, page){
+  const base = (url||"").toString().split('#')[0];
+  const p = (typeof page === 'number' && !Number.isNaN(page)) ? page : null;
+  return p ? `${base}#page=${p}` : base;
+}
 // Early Close
 function earlyCloseRaw(a){ return ((a.earlyClose ?? "") + "").trim(); }
 function isEarlyNoText(text){
   const s = (text ?? "").toString().trim().toLowerCase();
   if (!s) return true;
-  return new Set(["no","none","n/a","n.a.","n.a","na","nil","not applicable","not stated","no early close","no early closure","-","—","–"]).has(s);
+  return new Set([
+    "no","none","n/a","n.a.","n.a","na","nil","not applicable","not stated",
+    "no early close","no early closure","-","—","–"
+  ]).has(s);
 }
 function earlyCloseYes(a){ return !isEarlyNoText(earlyCloseRaw(a)); }
 function earlyCloseNode(a){
@@ -209,10 +221,37 @@ function render(){
     const tdExp=document.createElement("td"); const btn=document.createElement("button"); btn.className="expander"; btn.type="button"; btn.setAttribute("aria-expanded","false"); const descId=`desc-${rowIndex++}`; btn.setAttribute("aria-controls",descId); btn.setAttribute("aria-label","Toggle description"); btn.textContent="▶"; tdExp.appendChild(btn);
     const trDesc=document.createElement("tr"); trDesc.className="desc-row"; trDesc.id=descId; trDesc.hidden=true; const tdDesc=document.createElement("td"); tdDesc.colSpan=thCount;
     const eaLinkHtml=a.name?`<p class="ea-head">Access the <a href="${a.eaUrl||'#'}" target="_blank" rel="noopener noreferrer">${a.name}</a> (opens in new tab/window)</p>`:"";
-    tdDesc.innerHTML = `${(a.clauses && a.clauses.trim()) ? `<p><strong>Clause/s:</strong> ${a.clauses}</p>` : `<p><strong>Clause/s:</strong> —</p>`}
-${(typeof a.pageStart === 'number' && !Number.isNaN(a.pageStart)) ? `<p><strong>PDF page:</strong> ${a.pageStart}</p>` : `<p><strong>Starting on PDF page</strong> —</p>`}
-${a.name ? `<p>Access the <a href='${a.eaUrl || '#'}' target='_blank' rel='noopener noreferrer'>${a.name}</a></p><hr class='zig'><hr class='zag'>` : ''}
-${a.description + "<hr class='zig'><hr class='zag'>" || "<p class='muted'>No description provided.</p><hr class='zig'><hr class='zag'>"}`;
+    // Build description into a dedicated container to preserve other children (e.g., copy-link)
+
+(function(){
+  let descContainer = tdDesc.querySelector('.desc-content');
+  if (!descContainer) {
+    descContainer = document.createElement('div');
+    descContainer.className = 'desc-content';
+    tdDesc.appendChild(descContainer);
+  }
+  const parts = [];
+  // Clause/s
+  parts.push(`<p><strong>Clause/s:</strong> ${(a.clauses && a.clauses.trim()) ? a.clauses : '—'}</p>`);
+  // Starting page
+  parts.push(`<p><strong>Starting on PDF page</strong> ${(typeof a.pageStart === 'number' && !Number.isNaN(a.pageStart)) ? a.pageStart : '—'}</p>`);
+  // Access the entire + Jump to the relevant page (same line)
+  if (a.name) {
+    const pdfOk = isPdfUrl(a.eaUrl) && (typeof a.pageStart === 'number' && !Number.isNaN(a.pageStart));
+    const pdfLink = pdfOk ? `<a href='${pdfWithPage(a.eaUrl, a.pageStart)}' target='_blank' rel='noopener noreferrer'>PDF</a>` : `<span class='muted'>PDF</span>`;
+    const htmlHref = (a.htmlVer ?? '').toString().trim();
+    const htmlLink = htmlHref ? `<a href='${htmlHref}' target='_blank' rel='noopener noreferrer'>HTML</a>` : `<span class='muted'>HTML</span>`;
+    parts.push(`<p>Access the entire <a href='${a.eaUrl || '#'}' target='_blank' rel='noopener noreferrer'>${a.name}</a>. Jump to the relevant page: ${pdfLink} | ${htmlLink}</p>`);
+  }
+  // Description and <hr>
+  parts.push(`<hr class="zig"><hr class="zag">`);
+  parts.push(a.description || "<p class='muted'>No description provided.</p>");
+  parts.push(`<hr class="zig"><hr class="zag">`);
+
+  // Write without literal '\n' characters
+  descContainer.innerHTML = parts.join('');
+})();
+
     
     (function(){
       const copyBtn = document.createElement("button");
@@ -271,7 +310,7 @@ function exportCsv(){
   });
   const sorted=sortAgreements(filtered);
 
-  const header=["Portfolio","Entity Type","Agency","Listed as","Website","Enterprise Agreement URL","Name","Clause/s.","Page # Start","Shutdown?","Early Close","Description (HTML)"];
+  const header=["Portfolio","Entity Type","Agency","Listed as","Website","Enterprise Agreement URL","Name","Clause/s","Page # Start","Closedown","Early Close","Description (HTML)"];
   const rows=sorted.map(a=>[
     a.portfolio, entityLongLabel(a.entityType), a.agency, (a.eaHeading||""), a.website, a.eaUrl, a.name, a.clauses||"",
     (typeof a.pageStart==="number"&&!Number.isNaN(a.pageStart))?String(a.pageStart):"",

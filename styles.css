@@ -240,10 +240,11 @@ hr.zag {
 }
 .copy-link:hover { color: var(--text); }
 /* Give the content a little left padding to not collide with the button */
-#eaTable tbody tr.desc-row td .ea-head,
-#eaTable tbody tr.desc-row td p:first-child {
+#eaTable tbody tr.desc-row td .ea-head 
+/* #eaTable tbody tr.desc-row td p:first-child */ {
   padding-left: 6.5rem; /* room for the button; adjust if needed */
 }
+.muted {color: var(--muted);}
 /* On small screens, tuck it in slightly different if you like */
 @media (max-width: 880px) {
   .copy-link { top: .5rem; right: .6rem; }
