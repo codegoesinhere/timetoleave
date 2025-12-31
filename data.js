@@ -1,5 +1,4 @@
 // data.js
-// Keep all your data in this file (or split across multiple data-*.js files).
 // IMPORTANT: Use double quotes around strings so agency names with apostrophes don't need escaping.
 
 /**
@@ -702,7 +701,35 @@ window.agreements = [
     earlyClose: "No",
     description: "<ol class='prefix-dot' start='1'><li data-prefix='27'>Employees other than those on parental leave, long-service leave and leave without pay, will be provided paid time off without deduction from leave credits, for the three days between Christmas and New Years’ Day which would otherwise be working days.</li><li data-prefix='27'>Employees at DHA6 level and below who are required to work on any of the working days between Christmas and New Year to provide the skeleton staffing required to meet operational requirements will be paid at the rate of:<ol class='alpha-parens' start='1'><li>double time and a half for all hours required to be worked on the first working day after Boxing Day;</li><li>double time for all hours required to be worked on the other two days.</li></ol></li></ol>",
     htmlVer: ""
-  },    
+  },   
+  {
+    portfolio: "Defence",
+    entityType: "cce",
+    agency: "Australian Naval Nuclear Power Safety Regulator",
+    website: "https://www.annpsr.gov.au/",
+    eaUrl: "https://www.defence.gov.au/sites/default/files/2024-04/Defence-Enterprise-Collective-Agreement-2024.pdf",
+    name: "Defence Enterprise Collective Agreement 2024",
+    eaHeading: "Christmas stand down",
+    clauses: "E20",
+    pageStart: 64,
+    earlyClose: "No",
+    description: "<ol class='prefix-dot' start='1'><li data-prefix='E20'>The Christmas stand down applies from close of business on the last working day before Christmas Day until the commencement of the first working day following 1 January. Christmas stand down includes the public holidays, an additional day holiday and an Additional Specified Leave day in accordance with Table E4</li></ol><p class='moveOver'><strong>Table E4 Additional and Specified Leave days</strong></p><table class='eaData moveOver'><thead><tr><th>If Christmas Day is on a….</th><th>The Additional day is…</th><th>The Specified Leave day is…..</th></tr></thead><tbody><tr><td>Sunday</td><td>Wednesday 28 December</td><td>Tuesday 3 January</td></tr><tr><td>Monday</td><td>Wednesday 27 December</td><td>Tuesday 2 January</td></tr><tr><td>Tuesday</td><td>Monday 31 December</td><td>Monday 24 December</td></tr><tr><td>Wednesday</td><td>Friday 27 December</td><td>Tuesday 24 December</td></tr><tr><td>Thursday</td><td>Monday 29 December</td><td>Friday 2 January</td></tr><tr><td>Friday</td><td>Monday 29 December</td><td>Thursday 24 December</td></tr><tr><td>Saturday</td><td>Wednesday 29 December</td><td>Friday 24 December</td></tr></tbody></table><ol class='prefix-dot' start='1'><li data-prefix='E20'>Employees are not required to use Annual Leave or flextime to cover any part of the stand down. All employees are to absent themselves during the stand down unless the Director-General directs otherwise.</li><li data-prefix='E20'>Employees who are absent without pay or on Long Service Leave, and shift workers on Personal/Carer’s Leave, remain on these forms of absence with or without pay as applicable.</li><li data-prefix='E20'><strong>Notice for employee required to work</strong>. An employee directed to work during any part of the stand down's two weekdays are to be given at least seven days’ notice of such requirement. Where less than seven days’ notice is given, an affected employee attracts emergency duty conditions (see clause B17.17) for all time worked during the stand down's two weekdays.</li><li data-prefix='E20'><strong>Time off in lieu</strong>. An employee who is directed to work during any part of the stand down's two weekdays will be paid overtime or be granted TOIL within four weeks of the stand down. Where granting TOIL within this timeframe is impracticable, TOIL is to be granted before 1 May of the following year, at a time agreed between the employee and their supervisor. The amount of time off equals:<ol type='a'><li>if notice was given in accordance with paragraph E20.4 - the time worked during the employee’s ordinary hours, or</li><li>if notice was not given in accordance with paragraph E20.4 - one day for each day on which time was worked during the employee’s ordinary hours, regardless of the amount of time actually worked.</li></ol></li><li data-prefix='E20'><strong>Extraneous payments</strong>. For overtime, Restriction allowance and shift penalty payment purposes, the stand down’s two weekdays are to be treated as ordinary weekdays.</li></ol>",
+    htmlVer: ""
+  },
+  {
+    portfolio: "Defence",
+    entityType: "cce",
+    agency: "Defence and Veterans' Services Commission",
+    website: "https://www.dvsc.gov.au/",
+    eaUrl: "https://www.pmc.gov.au/sites/default/files/resource/download/pmc-enterprise-agreement-2024-27_0.pdf",
+    name: "PM&C Enterprise Agreement 2024-2027",
+    eaHeading: "Christmas closedown",
+    clauses: "174 to 176",
+    pageStart: 26,
+    earlyClose: "No",
+    description: "<ol start='174'><li>Christmas closedown is the period from the end of the last working day before Christmas day to the start of the first working day after New Year’s day.</li><li>Employees are not required to take leave and are not normally required to work during Christmas closedown, and will continue to be paid for their ordinary hours during this period, unless they are on unpaid leave directly before and directly after the Christmas closedown period.</li><li>In exceptional circumstances, employees may be directed by the Delegate to work during Christmas closedown. Where this occurs employees will be entitled to overtime.</li></ol>",
+    htmlVer: ""
+  },   
   {
     portfolio: "Education",
     entityType: "ncce",
