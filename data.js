@@ -279,6 +279,7 @@ window.agreements = [
     clauses: "187 to 193",
     pageStart: 35,
     earlyClose: "12:30pm",
+    easterEarlyClose: "3:00pm",
     description: "<ol start='187'><li>The Department will close its normal operations from 12:30pm on the last working day before Christmas Day, with business resuming on the first working day after New Year’s Day (closedown period).</li><li>The Department will close its normal operations from 3.00pm on Easter Thursday, with business resuming on the first working day after Easter Monday (closedown period).</li><li>There will be no deduction from leave credits for the closedown periods.</li><li>Employees will be provided with time off for the working days covered by the closedown periods and will be paid in accordance with their ordinary hours during those periods.</li><li>Where an employee is absent on paid leave, on both sides or on one side of a closedown period, payment for the closedown period will be in accordance with the employee’s ordinary hours.</li><li>Employees on leave without pay on either side of a closedown period will not be paid for the closedown period.</li><li>Employees directed to attend for duty during a closedown period will be eligible for payment or TOIL in lieu on the same basis as for duty on a Sunday.</li></ol>",
     htmlVer: ""
   },
@@ -1063,6 +1064,7 @@ window.agreements = [
     clauses: "5.107 to 5.112",
     pageStart: 41,
     earlyClose: "12:30pm",
+    easterEarlyClose: "3:00pm",
     description: "<ol class='prefix-dot' start='107'><li data-prefix='5'>The Commission will close its normal operations from:<ol class='prefix-dot'><li data-prefix='5.107'>12:30 pm on the last working day before Christmas Day until the first working day after New Year’s Day; and</li><li data-prefix='5.107'>3:00pm on Easter Thursday until Good Friday</li><strong>(closedown periods)</strong></ol></li><li data-prefix='5'>There will be no deduction from leave credits for the closedown periods.</li><li data-prefix='5'>employees will be provided with time off for the working days/hours covered by the closedown periods and will be paid in accordance with their ordinary hours.</li><li data-prefix='5'>Where an employee is absent on paid leave, on both sides or on one side of a closedown period, payment for the closedown period will be in accordance with the employee’s ordinary hours. To avoid doubt, if an employee is on leave at half pay on both sides of a closedown period, the employee will receive payment for the closedown period at half pay.</li><li data-prefix='5'>Employees on leave without pay on either side of a closedown period will not be paid for the closedown period.</li><li data-prefix='5'>Where the Commissioner approves for an employee to attend for duty during periods between Monday and Friday during a closedown period, the employee will be eligible for payment or time off in lieu, on the same basis as for duty on a Sunday for any days that are not public holidays. “Duty on a Sunday” means that employee will be paid at the rate of double time, which is inclusive of the single time already paid for the public holiday.</li></ol>",
     htmlVer: ""  
   },
@@ -1707,6 +1709,7 @@ window.agreements = [
     clauses: "40.1 to 40.4",
     pageStart: 28,
     earlyClose: "3:00pm",
+    easterEarlyClose: "3:00pm",
     description: "<ol class='prefix-dot'><li data-prefix='40'>The ILC workplaces will be closed for business for the Christmas/New Year Shutdown, which applies from 3:00pm on the last working day before Christmas until the commencement of the first working day following 1 January. There will be no requirement for employees to utilise their annual or personal Leave, flex or TOIL during this period.</li><li data-prefix='40'>ILC workplaces will be closed for business from 3.00pm on Easter Thursday reopening from 8:30am on Tuesday following Easter Monday. Employees will be granted 2 hours paid leave without deduction from their annual leave, flex or TOIL credits.</li><li data-prefix='40'>Employees directed to attend for duty during the shutdown periods at Christmas and Easter will be eligible for time off in lieu on the basis of one hour off for every one hour worked.</li><li data-prefix='40'>Casual employees will not be rostered to perform work during the Christmas/New Year/Easter Shutdown periods.</li></ol>",
     htmlVer: ""
   },        
