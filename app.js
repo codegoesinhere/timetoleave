@@ -7,6 +7,7 @@ const els = {
   clearSearch: document.getElementById('clearSearch'),
   shutdownFilter: document.getElementById('shutdownFilter'),
   earlyFilter: document.getElementById('earlyFilter'),
+  easterEarlyFilter: document.getElementById('easterEarlyFilter'),
   listedAsFilter: document.getElementById('listedAsFilter'),
   entityFilter: document.getElementById('entityFilter'),
   portfolioFilter: document.getElementById('portfolioFilter'),
@@ -18,6 +19,8 @@ const els = {
   countTotal: document.getElementById('countTotal'),
   countEarly: document.getElementById('countEarly'),
   countTotalB: document.getElementById('countTotalB'),
+  countEasterEarly: document.getElementById('countEasterEarly'),
+  countTotalC: document.getElementById('countTotalC'),
   backToTop: document.getElementById('backToTop')
 };
 
@@ -65,7 +68,7 @@ function focusByAnchor(anchor, {relaxFilters=true} = {}){
   let row = document.getElementById(anchor);
   if (!row && relaxFilters) {
     if (els.search) els.search.value = "";
-    for (const sel of [els.shutdownFilter, els.entityFilter, els.portfolioFilter, els.earlyFilter, els.listedAsFilter]) {
+    for (const sel of [els.shutdownFilter, els.entityFilter, els.portfolioFilter, els.earlyFilter, els.easterEarlyFilter, els.listedAsFilter]) {
       if (sel) sel.value = "all";
     }
     render();
@@ -111,6 +114,18 @@ function earlyCloseNode(a){
   else { span.className = "badge no"; span.textContent = "No"; }
   return span;
 }
+
+// Easter Early Close (parallel to Xmas early close)
+function easterEarlyCloseRaw(a){ return ((a.easterEarlyClose ?? "") + "").trim(); }
+function easterEarlyCloseYes(a){ return !isEarlyNoText(easterEarlyCloseRaw(a)); }
+function easterEarlyCloseNode(a){
+  const span = document.createElement("span");
+  const raw = easterEarlyCloseRaw(a);
+  if (easterEarlyCloseYes(a)) { span.className = "badge yes"; span.textContent = "Yes, " + raw; }
+  else { span.className = "badge no"; span.textContent = "No"; }
+  return span;
+}
+
 
 // Sorting
 function cmp(a,b){ return a.localeCompare(b, undefined, {sensitivity:"base"}); }
@@ -164,6 +179,7 @@ function render(){
   const entityFilter=els.entityFilter?.value||"all";
   const portfolioFilter=els.portfolioFilter?.value||"all";
   const earlyFilter=els.earlyFilter?.value||"all";
+  const easterEarlyFilter=els.easterEarlyFilter?.value||"all";
   const listedAsSel=els.listedAsFilter?.value||"all";
 
   const filtered=data.filter(a=>{
@@ -174,9 +190,10 @@ function render(){
     let entityMatch=true; if(entityFilter!=="all") entityMatch=a.entityType===entityFilter;
     let portfolioMatch=true; if(portfolioFilter!=="all") portfolioMatch=a.portfolio===portfolioFilter;
     let earlyMatch=true; if(earlyFilter!=="all") earlyMatch=earlyFilter==="yes"?earlyCloseYes(a):!earlyCloseYes(a);
+    let easterEarlyMatch=true; if(easterEarlyFilter!=="all") easterEarlyMatch=easterEarlyFilter==="yes"?easterEarlyCloseYes(a):!easterEarlyCloseYes(a);
     let listedAsMatch=true; if(listedAsSel!=="all") listedAsMatch=(a.eaHeading||"")===listedAsSel;
 
-    return textMatch&&statusMatch&&entityMatch&&portfolioMatch&&earlyMatch&&listedAsMatch;
+    return textMatch&&statusMatch&&entityMatch&&portfolioMatch&&earlyMatch&&easterEarlyMatch&&listedAsMatch;
   });
 
   const sorted=sortAgreements(filtered);
@@ -184,10 +201,13 @@ function render(){
   const total=data.length;
   const yesCount=data.reduce((acc,a)=>acc+(hasShutdown(a)?1:0),0);
   const earlyCount=data.reduce((acc,a)=>acc+(earlyCloseYes(a)?1:0),0);
+  const easterEarlyCount=data.reduce((acc,a)=>acc+(easterEarlyCloseYes(a)?1:0),0);
   if(els.countHas) els.countHas.textContent=String(yesCount);
   if(els.countTotal) els.countTotal.textContent=String(total);
   if(els.countEarly) els.countEarly.textContent=String(earlyCount);
   if(els.countTotalB) els.countTotalB.textContent=String(total);
+  if(els.countEasterEarly) els.countEasterEarly.textContent=String(easterEarlyCount);
+  if(els.countTotalC) els.countTotalC.textContent=String(total);
 
   els.tbody.innerHTML="";
   const thCount=document.querySelector("#eaTable thead tr").children.length;
@@ -203,13 +223,35 @@ function render(){
 
     const tdEntity=document.createElement("td");
     const wrap=document.createElement("span"); wrap.className="entity-cell";
+
+    // Entity type label — hover/focus this text to see the tooltip (no separate ? button)
     const code=document.createElement("span"); code.className="etag"; code.textContent=ENTITY_LABEL[a.entityType]||"";
-    const qm=document.createElement("button"); qm.className="qmark"; qm.type="button"; qm.setAttribute("aria-label","Entity type information");
-    const tip=document.createElement("div"); tip.className="tooltip"; tip.setAttribute("role","tooltip"); const tipId=`tip-${rowIndex}`; tip.id=tipId; tip.hidden=true; tip.innerHTML='<div class="tip"></div>'+entityLongLabel(a.entityType); qm.setAttribute("aria-describedby",tipId);
-    function showTip(){ ensureTooltipInView(tip); tip.hidden=false; } function hideTip(){ tip.hidden=true; }
-    qm.addEventListener("focus",showTip); qm.addEventListener("blur",hideTip); qm.addEventListener("mouseenter",showTip); qm.addEventListener("mouseleave",hideTip);
-    qm.addEventListener("keydown",(e)=>{ if(e.key==="Escape"||e.key==="Esc"){ hideTip(); qm.blur(); } if(e.key==="Enter"||e.key===" "){ e.preventDefault(); tip.hidden?showTip():hideTip(); }});
-    wrap.append(code,qm,tip); tdEntity.appendChild(wrap);
+
+    const tip=document.createElement("div"); tip.className="tooltip"; tip.setAttribute("role","tooltip");
+    const tipId=`tip-${rowIndex}`; tip.id=tipId; tip.hidden=true;
+    tip.innerHTML='<div class="tip"></div>'+entityLongLabel(a.entityType);
+
+    // Make the label container focusable for keyboard users
+    wrap.tabIndex = 0;
+    wrap.setAttribute("role","button");
+    wrap.setAttribute("aria-label","Entity type information");
+    wrap.setAttribute("aria-describedby", tipId);
+
+    function showTip(){ ensureTooltipInView(tip); tip.hidden=false; }
+    function hideTip(){ tip.hidden=true; }
+
+    // Keep tooltip open when moving pointer between label and tooltip (both are inside wrap)
+    wrap.addEventListener("focus",showTip);
+    wrap.addEventListener("blur",hideTip);
+    wrap.addEventListener("mouseenter",showTip);
+    wrap.addEventListener("mouseleave",hideTip);
+    wrap.addEventListener("keydown",(e)=>{
+      if(e.key==="Escape"||e.key==="Esc"){ hideTip(); wrap.blur(); }
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); tip.hidden?showTip():hideTip(); }
+    });
+
+    wrap.append(code,tip);
+    tdEntity.appendChild(wrap);
 
     const tdListed=document.createElement("td"); tdListed.textContent=(a.eaHeading||"");
 
@@ -217,6 +259,7 @@ function render(){
     const tdPage=document.createElement("td"); tdPage.textContent=(typeof a.pageStart==="number"&&!Number.isNaN(a.pageStart))?String(a.pageStart):"";
     const tdBadge=document.createElement("td"); tdBadge.innerHTML=shutdownBadge(a);
     const tdEarly=document.createElement("td"); tdEarly.appendChild(earlyCloseNode(a));
+    const tdEasterEarly=document.createElement("td"); tdEasterEarly.appendChild(easterEarlyCloseNode(a));
 
     const tdExp=document.createElement("td"); const btn=document.createElement("button"); btn.className="expander"; btn.type="button"; btn.setAttribute("aria-expanded","false"); const descId=`desc-${rowIndex++}`; btn.setAttribute("aria-controls",descId); btn.setAttribute("aria-label","Toggle description"); btn.textContent="▶"; tdExp.appendChild(btn);
     const trDesc=document.createElement("tr"); trDesc.className="desc-row"; trDesc.id=descId; trDesc.hidden=true; const tdDesc=document.createElement("td"); tdDesc.colSpan=thCount;
@@ -280,7 +323,7 @@ trDesc.appendChild(tdDesc);
 
     btn.addEventListener("click",()=>{ const expanded=btn.getAttribute("aria-expanded")==="true"; btn.setAttribute("aria-expanded",String(!expanded)); btn.textContent=expanded?"▶":"▼"; trDesc.hidden=!trDesc.hidden; setToggleAllLabel(); });
 
-    tr.append(tdPortfolio,tdAgency,tdEntity,tdListed,tdBadge,tdEarly,tdExp);
+    tr.append(tdPortfolio,tdAgency,tdEntity,tdListed,tdBadge,tdEarly,tdEasterEarly,tdExp);
     els.tbody.appendChild(tr); els.tbody.appendChild(trDesc);
   }
   setToggleAllLabel(); updateClearButton();
@@ -296,6 +339,7 @@ function exportCsv(){
   const entityFilter=els.entityFilter?.value||"all";
   const portfolioFilter=els.portfolioFilter?.value||"all";
   const earlyFilter=els.earlyFilter?.value||"all";
+  const easterEarlyFilter=els.easterEarlyFilter?.value||"all";
   const listedAsSel=els.listedAsFilter?.value||"all";
 
   const filtered=data.filter(a=>{
@@ -305,16 +349,17 @@ function exportCsv(){
     let entityMatch=true; if(entityFilter!=="all") entityMatch=a.entityType===entityFilter;
     let portfolioMatch=true; if(portfolioFilter!=="all") portfolioMatch=a.portfolio===portfolioFilter;
     let earlyMatch=true; if(earlyFilter!=="all") earlyMatch=earlyFilter==="yes"?earlyCloseYes(a):!earlyCloseYes(a);
+    let easterEarlyMatch=true; if(easterEarlyFilter!=="all") easterEarlyMatch=easterEarlyFilter==="yes"?easterEarlyCloseYes(a):!easterEarlyCloseYes(a);
     let listedAsMatch=true; if(listedAsSel!=="all") listedAsMatch=(a.eaHeading||"")===listedAsSel;
-    return textMatch&&statusMatch&&entityMatch&&portfolioMatch&&earlyMatch&&listedAsMatch;
+    return textMatch&&statusMatch&&entityMatch&&portfolioMatch&&earlyMatch&&easterEarlyMatch&&listedAsMatch;
   });
   const sorted=sortAgreements(filtered);
 
-  const header=["Portfolio","Entity Type","Agency","Listed as","Website","Enterprise Agreement URL","Name","Clause/s","Page # Start","Closedown","Early Close","Description (HTML)"];
+  const header=["Portfolio","Entity Type","Agency","Listed as","Website","Enterprise Agreement URL","Name","Clause/s","Page # Start","Xmas Closedown","Xmas Early Close","Easter Early Close","Description (HTML)"];
   const rows=sorted.map(a=>[
     a.portfolio, entityLongLabel(a.entityType), a.agency, (a.eaHeading||""), a.website, a.eaUrl, a.name, a.clauses||"",
     (typeof a.pageStart==="number"&&!Number.isNaN(a.pageStart))?String(a.pageStart):"",
-    shutdownStatus(a).replace(/^./,c=>c.toUpperCase()), earlyCloseYes(a)?("Yes, "+earlyCloseRaw(a)):"No",
+    shutdownStatus(a).replace(/^./,c=>c.toUpperCase()), earlyCloseYes(a)?("Yes, "+earlyCloseRaw(a)):"No", , easterEarlyCloseYes(a)?("Yes, "+easterEarlyCloseRaw(a)):"No",
     a.description ? a.description.replace(/\s+/g," ").trim() : ""
   ]);
   const csv=[header,...rows].map(r=>r.map(csvCell).join(",")).join("\r\n");
@@ -342,7 +387,7 @@ function focusByAnchor(anchor, {relaxFilters=true} = {}){
   if (!row && relaxFilters) {
     // clear filters so the item renders
     if (els.search) els.search.value = "";
-    for (const sel of [els.shutdownFilter, els.entityFilter, els.portfolioFilter, els.earlyFilter, els.listedAsFilter]) {
+    for (const sel of [els.shutdownFilter, els.entityFilter, els.portfolioFilter, els.earlyFilter, els.easterEarlyFilter, els.listedAsFilter]) {
       if (sel) sel.value = "all";
     }
     render();
@@ -375,6 +420,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   els.clearSearch?.addEventListener("click",()=>{ els.search.value=""; updateClearButton(); els.search.focus(); render(); });
   els.shutdownFilter?.addEventListener("change",render);
   els.earlyFilter?.addEventListener("change",render);
+  els.easterEarlyFilter?.addEventListener("change",render);
   els.listedAsFilter?.addEventListener("change",render);
   els.entityFilter?.addEventListener("change",render);
   els.portfolioFilter?.addEventListener("change",render);

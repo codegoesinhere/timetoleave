@@ -60,7 +60,7 @@
   </section>
   <section id="currency">
     <h2>Currency of information</h2>
-    <p>Version: <span class="current-date">1.2.1</span></p>
+    <p>Version: <span class="current-date">1.2.0</span></p>
     <p>Last updated: <span class="current-date">31 December 2025</span></p>
     <p>Information in line with PGPA Flipchart: <span class="current-date">3 November 2025</span></p>
   </section>  
@@ -111,13 +111,22 @@
         </select>
       </div>
       <div class="control">
-        <label for="earlyFilter">Early close</label>
+        <label for="earlyFilter">Xmas early close</label>
         <select id="earlyFilter">
           <option value="all" selected>All</option>
           <option value="yes">Yes</option>
           <option value="no">No</option>
         </select>
       </div>
+      <div class="control">
+        <label for="easterEarlyFilter">Easter early close</label>
+        <select id="easterEarlyFilter">
+          <option value="all" selected>All</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+
       <div class="control">
         <label for="listedAsFilter">Listed as</label>
         <select id="listedAsFilter">
@@ -127,8 +136,9 @@
     </section>
     <section class="summary" aria-live="polite">
       <div class="summary-left">
-        <strong><span id="countHas">0</span></strong> of <strong><span id="countTotal">0</span></strong> agencies show a closedown clause. 
-        <span class="sep">•</span> Early close: <strong><span id="countEarly">0</span></strong> of <strong><span id="countTotalB">0</span></strong>.
+        <strong><span id="countHas">0</span></strong> of <strong><span id="countTotal">0</span></strong> agencies show a closedown clause.
+        <span class="sep">•</span> Xmas Early Close: <strong><span id="countEarly">0</span></strong> of <strong><span id="countTotalB">0</span></strong>.
+        <span class="sep">•</span> Easter Early Close: <strong><span id="countEasterEarly">0</span></strong> of <strong><span id="countTotalC">0</span></strong>.
       </div>
       <div class="summary-right">
         <button id="toggleAll" type="button" aria-expanded="false">Expand all details</button>
@@ -142,8 +152,9 @@
             <th>Entity/Company</th>
             <th>Entity</th>
             <th>Listed as</th>
-            <th>Closedown</th>
-            <th>Early Close</th>
+            <th>Xmas Closedown</th>
+            <th>Xmas Early Close</th>
+            <th>Easter Early Close</th>
             <th aria-label="Expand/Collapse">Details</th>
           </tr>
         </thead>
@@ -238,6 +249,6 @@
     <small>Thanks for taking a look :)</small>
   </footer>
   <script defer src="data.js"></script>
-  <script defer src="app.patched.js"></script>
+  <script defer src="app.js"></script>
 </body>
 </html>
