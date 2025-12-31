@@ -704,7 +704,7 @@ window.agreements = [
   },   
   {
     portfolio: "Defence",
-    entityType: "cce",
+    entityType: "ncce",
     agency: "Australian Naval Nuclear Power Safety Regulator",
     website: "https://www.annpsr.gov.au/",
     eaUrl: "https://www.defence.gov.au/sites/default/files/2024-04/Defence-Enterprise-Collective-Agreement-2024.pdf",
@@ -718,7 +718,7 @@ window.agreements = [
   },
   {
     portfolio: "Defence",
-    entityType: "cce",
+    entityType: "ncce",
     agency: "Defence and Veterans' Services Commission",
     website: "https://www.dvsc.gov.au/",
     eaUrl: "https://www.pmc.gov.au/sites/default/files/resource/download/pmc-enterprise-agreement-2024-27_0.pdf",
