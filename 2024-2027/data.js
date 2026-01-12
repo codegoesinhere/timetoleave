@@ -1112,6 +1112,20 @@ window.agreements = [
   },
   {
     portfolio: "Health, Disability and Ageing",
+    entityType: "ncce",
+    agency: "Australian Centre for Disease Control",
+    website: "https://www.cdc.gov.au/",
+    eaUrl: "https://www.health.gov.au/sites/default/files/2025-11/enterprise-agreement-ea_0.pdf",
+    name: "Department of Health and Aged Care Enterprise Agreement 2024-2027",
+    eaHeading: "Annual closedown and early stand down",
+    clauses: "215 to 219",
+    pageStart: 36,
+    earlyClose: "03:00pm",
+    description: "<ol start='215'><li>The department will be closed for normal business and employees will not be required to perform normal duty on the working days between Christmas Day and New Year’s Day (annual closedown). Eligible employees will be paid for annual closedown. Pay eligibility for annual closedown will be treated in the same manner as public holidays in determining the appropriate rate of salary payment to apply on those days.</li><li>Where an employee is absent on leave, payment for the annual closedown will be in accordance with the entitlement for that form of leave (e.g. if on long service leave at half pay, payment is at half pay).</li><li>There will be no deduction from annual, personal/carers leave, or defence service sick leave credits for the annual closedown days.</li><li>The department will be closed for normal business and employees will not be required to perform duty from 3.00pm on the working day prior to Christmas Day and the working day prior to Good Friday. Eligible employees will be paid for their ordinary hours. Payment eligibility will be treated in the same manner as a normal working day.</li></ol>",
+    htmlVer: ""
+  },      
+  {
+    portfolio: "Health, Disability and Ageing",
     entityType: "cce",
     agency: "Australian Commission on Safety and Quality in Health Care",
     website: "https://www.safetyandquality.gov.au/",
