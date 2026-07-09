@@ -24,22 +24,7 @@ const els = {
   backToTop: document.getElementById('backToTop')
 };
 
-
 const ENTITY_LABEL = { ncce: "NCCE", cce: "CCE", company: "Company" };
-
-function colorForEntityType(a){
-  const t = (typeof a === "string" ? a : (a?.entityType || "")).toString().trim().toLowerCase();
-
-  // Treat departments as NCCE where appropriate
-  const agency = (a?.agency || "").toString().toLowerCase();
-  if (t === "ncce" && agency.includes("department")) return "purple";
-
-  if (t === "ncce") return "#ccccff";
-  if (t === "cce") return "#aae1c2";
-  if (t === "company") return "#f9eeba";
-  return "purple";
-}
-
 function entityLongLabel(code){
   switch (code) {
     case "ncce": return "Non‑corporate Commonwealth entity (NCCE)";
@@ -240,7 +225,7 @@ function render(){
     const wrap=document.createElement("span"); wrap.className="entity-cell";
 
     // Entity type label — hover/focus this text to see the tooltip (no separate ? button)
-    const code=document.createElement("span"); code.className="etag"; code.textContent=ENTITY_LABEL[a.entityType]||""; code.style.borderColor=colorForEntityType(a);
+    const code=document.createElement("span"); code.className="etag"; code.textContent=ENTITY_LABEL[a.entityType]||"";
 
     const tip=document.createElement("div"); tip.className="tooltip"; tip.setAttribute("role","tooltip");
     const tipId=`tip-${rowIndex}`; tip.id=tipId; tip.hidden=true;
