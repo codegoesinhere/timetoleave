@@ -566,6 +566,20 @@ window.agreements = [
   {
     portfolio: "Climate Change, Energy, the Environment and Water",
     entityType: "ncce",
+    agency: "Australian Energy Regulator (AER)",
+    website: "https://www.aer.gov.au/",
+    eaUrl: "https://www.accc.gov.au/system/files/accc-enterprise-agreement-2024-27.pdf",
+    name: "ACCC Enterprise Agreement 2024-2027",
+    eaHeading: "End of year closedown",
+    clauses: "211 to 214",
+    pageStart: 39,
+    earlyClose: "12:00pm",
+    description: "",
+    htmlVer: ""
+  },   
+  {
+    portfolio: "Climate Change, Energy, the Environment and Water",
+    entityType: "ncce",
     agency: "Bureau of Meteorology (BOM)",
     website: "https://www.bom.gov.au/",
     eaUrl: "https://www.fwc.gov.au/document-search/view/3/aHR0cHM6Ly9zYXNyY2RhdGFwcmRhdWVhYS5ibG9iLmNvcmUud2luZG93cy5uZXQvZW50ZXJwcmlzZWFncmVlbWVudHMvMjAyNC8zL2FlNTIzOTE1LnBkZg2?sid=",
@@ -577,6 +591,20 @@ window.agreements = [
     description: "<ol class='prefix-dot' start='131'><li data-prefix='5'>The Bureau will reduce its normal day worker operations over the Christmas to New Year holiday period, from close of business on Christmas Eve to the start of the first working day after New Years’ Day (known as the “Christmas -New Year Partial Closure”) due to the additional time worked under clause 5.18.</li><li data-prefix='5'>Non-shift workers are allowed to be absent for the last two working daysinDecember without having to take annual leave, flex leave or leave without pay. These two days will count as service for all purposes, and are in addition to the Bureau-initiated leave day specified in clause 5.147.</li><li data-prefix='5'>If a part-time employee is not rostered/contracted to work on a shutdown day, they must be provided with the appropriate time off in lieu, to be taken within four weeks or at an alternative time convenient to the employee and their supervisor.</li></ol>",
     htmlVer: ""
   },
+  {
+    portfolio: "Climate Change, Energy, the Environment and Water",
+    entityType: "ncce",
+    agency: "Clean Energy Regulator (CER)",
+    website: "https://cer.gov.au/",
+    eaUrl: "https://cer.gov.au/document/clean-energy-regulator-enterprise-agreement",
+    name: "Clean Energy Regulator Enterprise Agreement 2024-2027",
+    eaHeading: "Christmas closedown",
+    clauses: "193 to 196",
+    pageStart: 30,
+    earlyClose: "No",
+    description: "",
+    htmlVer: ""
+  },  
   {
     portfolio: "Climate Change, Energy, the Environment and Water",
     entityType: "ncce",
