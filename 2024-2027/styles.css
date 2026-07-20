@@ -27,7 +27,7 @@ a:hover {background: #df90001f;}
 .site-header, .site-footer { padding: 1rem; background: var(--panel); border-bottom: 1px solid var(--border); }
 .site-footer { border-top: 1px solid var(--border); border-bottom: none; color: var(--muted); }
 h1 { margin: 0 0 .25rem; font-size: clamp(1.25rem, 1.5vw + 1rem, 2rem); }
-#tonote, #table, #currency {margin-top: 4rem;}
+#tonote, #table, #currency, #statistics {margin-top: 4rem;}
 .lead { margin: 0; color: var(--muted); }
 .notes {font-size: 0.9rem;}
 .controls { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); align-items: end; margin: 1rem 0; }
@@ -53,6 +53,17 @@ h1 { margin: 0 0 .25rem; font-size: clamp(1.25rem, 1.5vw + 1rem, 2rem); }
   display: inline-block; font-weight: 700; font-size: .6rem; padding: 0 .45rem;
   border: 1px solid var(--border); border-radius: .35rem; background: #0b0c10; color: var(--text);
 }
+.high-level-statistics {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: .8rem;
+  padding: 1rem 1.25rem;
+}
+.high-level-statistics h2 { margin-top: 0; }
+.high-level-statistics > ul { margin-bottom: 0; }
+.high-level-statistics li { padding-block: .2rem; }
+.all-entities-stat { color: var(--muted); font-size: 0.9rem;}
+
 .summary {
   background: #0b0c10; border: 1px solid var(--border); border-radius: .6rem;
   padding: .75rem 1rem; color: var(--muted); display: flex; align-items: center; justify-content: space-between; gap: 1rem;
@@ -73,7 +84,7 @@ tbody td { padding: .6rem .75rem; border-bottom: 1px solid var(--border); vertic
 tbody tr:hover { background: rgba(255,255,255,.02); }
 td a { text-decoration: none; }
 td a:hover { text-decoration: underline; }
-.badge { display: inline-block; padding: .2rem .5rem; border-radius: .5rem; font-size: .8rem; font-weight: 700; }
+.badge { display: inline-block; padding: .2rem .5rem; border-radius: .5rem; font-size: .7rem; font-weight: 700; }
 .badge.yes { background: rgba(47,191,113,.15); color: var(--good); border: 1px solid rgba(47,191,113,.35); }
 .badge.no  { background: rgba(255,107,107,.15); color: var(--bad); border: 1px solid rgba(255,107,107,.35); }
 .badge.unknown { background: rgba(255,209,102,.15); color: var(--warn); border: 1px solid rgba(255,209,102,.35); }

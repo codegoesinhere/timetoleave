@@ -21,7 +21,20 @@ const els = {
   countTotalB: document.getElementById('countTotalB'),
   countEasterEarly: document.getElementById('countEasterEarly'),
   countTotalC: document.getElementById('countTotalC'),
-  backToTop: document.getElementById('backToTop')
+  backToTop: document.getElementById('backToTop'),
+  statsTotalEntities: document.getElementById('statsTotalEntities'),
+  statsNcce: document.getElementById('statsNcce'),
+  statsCce: document.getElementById('statsCce'),
+  statsCompany: document.getElementById('statsCompany'),
+  statsEaListed: document.getElementById('statsEaListed'),
+  statsEaNotListed: document.getElementById('statsEaNotListed'),
+  statsEaListedReminder: document.getElementById('statsEaListedReminder'),
+  statsClosedown: document.getElementById('statsClosedown'),
+  statsClosedownAll: document.getElementById('statsClosedownAll'),
+  statsChristmasEarly: document.getElementById('statsChristmasEarly'),
+  statsChristmasEarlyAll: document.getElementById('statsChristmasEarlyAll'),
+  statsEasterEarly: document.getElementById('statsEasterEarly'),
+  statsEasterEarlyAll: document.getElementById('statsEasterEarlyAll')
 };
 
 
@@ -187,6 +200,63 @@ function ensureTooltipInView(tip){
   if(wasHidden) tip.setAttribute("hidden","");
 }
 
+function setText(el, value){
+  if (el) el.textContent = String(value);
+}
+
+function formatPercentage(count, total){
+  const percentage = total > 0 ? (count / total) * 100 : 0;
+  return `${percentage.toFixed(2)}%`;
+}
+
+function formatStatistic(count, total){
+  return `${count} (${formatPercentage(count, total)})`;
+}
+
+function getNotListedEntityStats(){
+  const stats = { total: 0, ncce: 0, cce: 0, company: 0 };
+  const items = document.querySelectorAll('.help ol.indentChild > li');
+
+  for (const item of items) {
+    const label = item.querySelector('.etag')?.textContent.trim().toLowerCase();
+    stats.total += 1;
+    if (label === 'ncce') stats.ncce += 1;
+    else if (label === 'cce') stats.cce += 1;
+    else if (label === 'company') stats.company += 1;
+  }
+
+  return stats;
+}
+
+function updateHighLevelStatistics(data, yesCount, earlyCount, easterEarlyCount){
+  const listed = { total: data.length, ncce: 0, cce: 0, company: 0 };
+
+  for (const agreement of data) {
+    const type = (agreement.entityType || '').trim().toLowerCase();
+    if (type === 'ncce') listed.ncce += 1;
+    else if (type === 'cce') listed.cce += 1;
+    else if (type === 'company') listed.company += 1;
+  }
+
+  const notListed = getNotListedEntityStats();
+
+  const totalEntities = listed.total + notListed.total;
+
+  setText(els.statsTotalEntities, formatStatistic(totalEntities, totalEntities));
+  setText(els.statsNcce, formatStatistic(listed.ncce + notListed.ncce, totalEntities));
+  setText(els.statsCce, formatStatistic(listed.cce + notListed.cce, totalEntities));
+  setText(els.statsCompany, formatStatistic(listed.company + notListed.company, totalEntities));
+  setText(els.statsEaListed, formatStatistic(listed.total, totalEntities));
+  setText(els.statsEaNotListed, formatStatistic(notListed.total, totalEntities));
+  setText(els.statsEaListedReminder, formatStatistic(listed.total, totalEntities));
+  setText(els.statsClosedown, formatStatistic(yesCount, listed.total));
+  setText(els.statsClosedownAll, formatPercentage(yesCount, totalEntities));
+  setText(els.statsChristmasEarly, formatStatistic(earlyCount, listed.total));
+  setText(els.statsChristmasEarlyAll, formatPercentage(earlyCount, totalEntities));
+  setText(els.statsEasterEarly, formatStatistic(easterEarlyCount, listed.total));
+  setText(els.statsEasterEarlyAll, formatPercentage(easterEarlyCount, totalEntities));
+}
+
 function render(){
   const data=window.agreements||[];
   const q=(els.search?.value||"").trim().toLowerCase();
@@ -223,6 +293,7 @@ function render(){
   if(els.countTotalB) els.countTotalB.textContent=String(total);
   if(els.countEasterEarly) els.countEasterEarly.textContent=String(easterEarlyCount);
   if(els.countTotalC) els.countTotalC.textContent=String(total);
+  updateHighLevelStatistics(data, yesCount, earlyCount, easterEarlyCount);
 
   els.tbody.innerHTML="";
   const thCount=document.querySelector("#eaTable thead tr").children.length;
