@@ -50,7 +50,7 @@ h1 { margin: 0 0 .25rem; font-size: clamp(1.25rem, 1.5vw + 1rem, 2rem); }
 .legend { display: flex; gap: 1rem; flex-wrap: wrap; margin: .25rem 0 1rem; color: var(--muted); }
 .legend-item { display: inline-flex; align-items: center; gap: .4rem; }
 .etag {
-  display: inline-block; font-weight: 700; font-size: .85rem; padding: 0 .45rem;
+  display: inline-block; font-weight: 700; font-size: .6rem; padding: 0 .45rem;
   border: 1px solid var(--border); border-radius: .35rem; background: #0b0c10; color: var(--text);
 }
 .summary {
