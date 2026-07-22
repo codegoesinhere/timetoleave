@@ -29,12 +29,12 @@ const els = {
   statsEaListed: document.getElementById('statsEaListed'),
   statsEaNotListed: document.getElementById('statsEaNotListed'),
   statsEaListedReminder: document.getElementById('statsEaListedReminder'),
-  statsClosedown: document.getElementById('statsClosedown'),
   statsClosedownAll: document.getElementById('statsClosedownAll'),
-  statsChristmasEarly: document.getElementById('statsChristmasEarly'),
   statsChristmasEarlyAll: document.getElementById('statsChristmasEarlyAll'),
-  statsEasterEarly: document.getElementById('statsEasterEarly'),
-  statsEasterEarlyAll: document.getElementById('statsEasterEarlyAll')
+  statsEasterEarlyAll: document.getElementById('statsEasterEarlyAll'),
+  statsClosedown: document.getElementById('statsClosedown'),
+  statsChristmasEarly: document.getElementById('statsChristmasEarly'),
+  statsEasterEarly: document.getElementById('statsEasterEarly')
 };
 
 
@@ -200,17 +200,80 @@ function ensureTooltipInView(tip){
   if(wasHidden) tip.setAttribute("hidden","");
 }
 
+function initStaticEntityTooltips(){
+  const descriptions = {
+    ncce: "Non-corporate Commonwealth entity",
+    cce: "Corporate Commonwealth entity",
+    company: "Commonwealth company",
+    department: "Department (a Department of State under the PGPA framework)"
+  };
+
+  document.querySelectorAll('.help .etag').forEach((tag, index) => {
+    if (tag.dataset.entityTooltipReady === 'true') return;
+
+    const type = (tag.textContent || '').trim().toLowerCase();
+    const description = descriptions[type];
+    if (!description) return;
+
+    tag.dataset.entityTooltipReady = 'true';
+    tag.tabIndex = 0;
+    tag.style.cursor = 'help';
+    tag.setAttribute('role', 'button');
+    tag.setAttribute('aria-label', `${tag.textContent.trim()}: ${description}`);
+
+    const tip = document.createElement('div');
+    tip.className = 'tooltip';
+    tip.id = `static-entity-tip-${index}`;
+    tip.setAttribute('role', 'tooltip');
+    tip.hidden = true;
+    tip.innerHTML = `<span class="tip"></span><div><strong>${tag.textContent.trim()}</strong></div><div class="muted">${description}</div>`;
+    document.body.appendChild(tip);
+    tag.setAttribute('aria-describedby', tip.id);
+
+    function showTip(){
+      tip.hidden = false;
+      tip.style.position = 'fixed';
+      tip.style.zIndex = '9999';
+      tip.classList.remove('top');
+
+      const tagRect = tag.getBoundingClientRect();
+      const tipRect = tip.getBoundingClientRect();
+      const margin = 8;
+      let left = Math.max(margin, Math.min(tagRect.left, window.innerWidth - tipRect.width - margin));
+      let top = tagRect.bottom + 6;
+      const showAbove = top + tipRect.height + margin > window.innerHeight;
+      if (showAbove) top = Math.max(margin, tagRect.top - tipRect.height - 6);
+
+      tip.classList.toggle('top', showAbove);
+      tip.style.left = `${left}px`;
+      tip.style.top = `${top}px`;
+    }
+
+    function hideTip(){ tip.hidden = true; }
+
+    tag.addEventListener('mouseenter', showTip);
+    tag.addEventListener('mouseleave', hideTip);
+    tag.addEventListener('focus', showTip);
+    tag.addEventListener('blur', hideTip);
+    tag.addEventListener('click', event => {
+      event.preventDefault();
+      tip.hidden ? showTip() : hideTip();
+    });
+    tag.addEventListener('keydown', event => {
+      if (event.key === 'Escape' || event.key === 'Esc') {
+        hideTip();
+        tag.blur();
+      }
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        tip.hidden ? showTip() : hideTip();
+      }
+    });
+  });
+}
+
 function setText(el, value){
   if (el) el.textContent = String(value);
-}
-
-function formatPercentage(count, total){
-  const percentage = total > 0 ? (count / total) * 100 : 0;
-  return `${percentage.toFixed(2)}%`;
-}
-
-function formatStatistic(count, total){
-  return `${count} (${formatPercentage(count, total)})`;
 }
 
 function getNotListedEntityStats(){
@@ -228,6 +291,11 @@ function getNotListedEntityStats(){
   return stats;
 }
 
+function formatPercent(value, total){
+  if (!total) return '0.00%';
+  return `${((value / total) * 100).toFixed(2)}%`;
+}
+
 function updateHighLevelStatistics(data, yesCount, earlyCount, easterEarlyCount){
   const listed = { total: data.length, ncce: 0, cce: 0, company: 0 };
 
@@ -239,22 +307,23 @@ function updateHighLevelStatistics(data, yesCount, earlyCount, easterEarlyCount)
   }
 
   const notListed = getNotListedEntityStats();
+  const allEntities = listed.total + notListed.total;
 
-  const totalEntities = listed.total + notListed.total;
+  setText(els.statsTotalEntities, allEntities);
+  setText(els.statsNcce, `${listed.ncce + notListed.ncce} (${formatPercent(listed.ncce + notListed.ncce, allEntities)})`);
+  setText(els.statsCce, `${listed.cce + notListed.cce} (${formatPercent(listed.cce + notListed.cce, allEntities)})`);
+  setText(els.statsCompany, `${listed.company + notListed.company} (${formatPercent(listed.company + notListed.company, allEntities)})`);
+  setText(els.statsEaListed, `${listed.total} (${formatPercent(listed.total, allEntities)})`);
+  setText(els.statsEaNotListed, `${notListed.total} (${formatPercent(notListed.total, allEntities)})`);
+  setText(els.statsEaListedReminder, `${listed.total} (${formatPercent(listed.total, allEntities)})`);
 
-  setText(els.statsTotalEntities, formatStatistic(totalEntities, totalEntities));
-  setText(els.statsNcce, formatStatistic(listed.ncce + notListed.ncce, totalEntities));
-  setText(els.statsCce, formatStatistic(listed.cce + notListed.cce, totalEntities));
-  setText(els.statsCompany, formatStatistic(listed.company + notListed.company, totalEntities));
-  setText(els.statsEaListed, formatStatistic(listed.total, totalEntities));
-  setText(els.statsEaNotListed, formatStatistic(notListed.total, totalEntities));
-  setText(els.statsEaListedReminder, formatStatistic(listed.total, totalEntities));
-  setText(els.statsClosedown, formatStatistic(yesCount, listed.total));
-  setText(els.statsClosedownAll, formatPercentage(yesCount, totalEntities));
-  setText(els.statsChristmasEarly, formatStatistic(earlyCount, listed.total));
-  setText(els.statsChristmasEarlyAll, formatPercentage(earlyCount, totalEntities));
-  setText(els.statsEasterEarly, formatStatistic(easterEarlyCount, listed.total));
-  setText(els.statsEasterEarlyAll, formatPercentage(easterEarlyCount, totalEntities));
+  setText(els.statsClosedown, `${yesCount} (${formatPercent(yesCount, listed.total)})`);
+  setText(els.statsChristmasEarly, `${earlyCount} (${formatPercent(earlyCount, listed.total)})`);
+  setText(els.statsEasterEarly, `${easterEarlyCount} (${formatPercent(easterEarlyCount, listed.total)})`);
+
+  setText(els.statsClosedownAll, formatPercent(yesCount, allEntities));
+  setText(els.statsChristmasEarlyAll, formatPercent(earlyCount, allEntities));
+  setText(els.statsEasterEarlyAll, formatPercent(easterEarlyCount, allEntities));
 }
 
 function render(){
@@ -515,7 +584,9 @@ document.addEventListener("DOMContentLoaded",()=>{
   els.toggleAll?.addEventListener("click",toggleAll);
   els.backToTop?.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
   window.addEventListener("scroll",onScroll,{passive:true});
-  render(); onScroll(); 
+  render();
+  initStaticEntityTooltips();
+  onScroll(); 
   applyDeepLinkFromHash();
   window.addEventListener("hashchange", applyDeepLinkFromHash);
 
