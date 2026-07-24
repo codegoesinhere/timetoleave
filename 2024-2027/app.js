@@ -22,6 +22,11 @@ const els = {
   countEasterEarly: document.getElementById('countEasterEarly'),
   countTotalC: document.getElementById('countTotalC'),
   backToTop: document.getElementById('backToTop'),
+  floatingPageActions: document.getElementById('floatingPageActions'),
+  pageMenuPanel: document.getElementById('pageMenuPanel'),
+  pageMenuNav: document.getElementById('pageMenuNav'),
+  pageMenuButton: document.getElementById('pageMenuButton'),
+  pageMenuClose: document.getElementById('pageMenuClose'),
   statsTotalEntities: document.getElementById('statsTotalEntities'),
   statsNcce: document.getElementById('statsNcce'),
   statsCce: document.getElementById('statsCce'),
@@ -524,7 +529,39 @@ function exportCsv(){
 function csvCell(v){ const s=(v??"").toString(); return '"' + s.replaceAll('"','""') + '"'; }
 
 function updateClearButton(){ if(!els.clearSearch) return; els.clearSearch.hidden=!(els.search && els.search.value); }
-function onScroll(){ const scrolled=window.scrollY||document.documentElement.scrollTop; const shouldShow=scrolled>250; if(shouldShow){ els.backToTop.hidden=false; els.backToTop.classList.add("show"); } else { els.backToTop.classList.remove("show"); els.backToTop.hidden=true; } }
+function closePageMenu(){
+  if (!els.pageMenuPanel || !els.pageMenuButton) return;
+  els.pageMenuPanel.hidden = true;
+  els.pageMenuButton.setAttribute("aria-expanded", "false");
+}
+
+function initPageMenu(){
+  if (!els.pageMenuNav) return;
+  const tocList = document.querySelector(".toc > ol");
+  if (!tocList) return;
+
+  const menuList = tocList.cloneNode(true);
+  menuList.removeAttribute("id");
+  els.pageMenuNav.replaceChildren(menuList);
+
+  els.pageMenuNav.addEventListener("click", event => {
+    if (event.target.closest("a")) closePageMenu();
+  });
+}
+
+function onScroll(){
+  const scrolled = window.scrollY || document.documentElement.scrollTop || 0;
+  if (!els.floatingPageActions) return;
+
+  if (scrolled > 250){
+    els.floatingPageActions.hidden = false;
+    requestAnimationFrame(() => els.floatingPageActions.classList.add("show"));
+  } else {
+    els.floatingPageActions.classList.remove("show");
+    closePageMenu();
+    els.floatingPageActions.hidden = true;
+  }
+}
 
 // Make a stable anchor from Portfolio+Agency
 function slugify(s){
@@ -583,9 +620,22 @@ document.addEventListener("DOMContentLoaded",()=>{
   els.exportCsv?.addEventListener("click",exportCsv);
   els.toggleAll?.addEventListener("click",toggleAll);
   els.backToTop?.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+  els.pageMenuButton?.addEventListener("click", () => {
+    const willOpen = els.pageMenuPanel?.hidden ?? true;
+    if (els.pageMenuPanel) els.pageMenuPanel.hidden = !willOpen;
+    els.pageMenuButton?.setAttribute("aria-expanded", String(willOpen));
+  });
+  els.pageMenuClose?.addEventListener("click", closePageMenu);
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") closePageMenu();
+  });
+  document.addEventListener("click", event => {
+    if (!els.floatingPageActions?.contains(event.target)) closePageMenu();
+  });
   window.addEventListener("scroll",onScroll,{passive:true});
   render();
   initStaticEntityTooltips();
+  initPageMenu();
   onScroll(); 
   applyDeepLinkFromHash();
   window.addEventListener("hashchange", applyDeepLinkFromHash);

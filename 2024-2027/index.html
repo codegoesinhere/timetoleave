@@ -286,7 +286,17 @@
         </ol>
     </section>
   </main>
-  <button id="backToTop" class="back-to-top" type="button" aria-label="Back to top" title="Back to top" hidden>↑</button>
+  <div id="floatingPageActions" class="floating-page-actions" hidden>
+    <div id="pageMenuPanel" class="page-menu-panel" hidden>
+      <div class="page-menu-panel__header">
+        <strong>On this page</strong>
+        <button id="pageMenuClose" class="page-menu-close" type="button" aria-label="Close page menu" title="Close menu">×</button>
+      </div>
+      <nav id="pageMenuNav" aria-label="On this page"></nav>
+    </div>
+    <button id="pageMenuButton" class="floating-page-button" type="button" aria-label="Open page menu" title="Page menu" aria-expanded="false" aria-controls="pageMenuPanel">☰</button>
+    <button id="backToTop" class="floating-page-button" type="button" aria-label="Back to top" title="Back to top">↑</button>
+  </div>
   <footer class="site-footer">
     <small>Thanks for taking a look :)</small>
   </footer>
